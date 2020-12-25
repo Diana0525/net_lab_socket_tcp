@@ -39,9 +39,9 @@ int main(int argc, char** argv)
     }else{
         strcpy(fi.name,p+1); // 路径的末尾是文件名
     }
-
+    printf("%s %s\n",argv[1],argv[2]);
     int sock_listen;
-    sock_listen = socket(AF_INET, SOCK_STREAM, 0);
+    sock_listen = socket(AF_INET, SOCK_STREAM, 0);// socket创建套接字
 
     // setsockopt函数：设置套接字属性
     // 将套接字的SO_REUSEADDR属性设置为1，即允许地址复用
@@ -52,28 +52,30 @@ int main(int argc, char** argv)
     struct sockaddr_in myaddr;
     myaddr.sin_family = AF_INET; // 指定地址family为Internet地址family
     myaddr.sin_addr.s_addr = INADDR_ANY; // 本机任意地址
+    // myaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
     myaddr.sin_port = htons(atoi(argv[1]));// 指定端口号
     // htons函数：将主机字节序表示的short类型数据转化为网络字节序
 
     if(bind(sock_listen, (struct sockaddr*)&myaddr, sizeof(myaddr)) == -1){
         perror("bind error");
-        exit(1);{}
+        exit(1);
     }
     listen(sock_listen, 5);
-
+    
     struct sockaddr_in clnaddr;
     socklen_t len;
-    while (1)
-    {
+    // while (1)
+    // {
         int sock_conn; // 连接套接字，用于和相应的客户端通信
         // accept函数，接收一个客户端连接请求，如果调用该函数时没有客户端连接请求到来，他将会阻塞，直到成功接收请求，或者出错才返回.
-        sock_conn = accept(sock_listen, (struct sockaddr*)&clnaddr,&len);
+        sock_conn = accept(sock_listen, NULL, NULL);
         len = sizeof(clnaddr);
         sock_conn = accept(sock_listen, (struct sockaddr*)&clnaddr,&len);
 
         if(sock_conn == -1){
             perror("连接错误！");
-            continue;
+            exit(1);
+            // continue;
         }
 
         printf("客户端%s:%d已经连接！\n",inet_ntoa(clnaddr.sin_addr), clnaddr.sin_port);
@@ -93,11 +95,12 @@ int main(int argc, char** argv)
             send(sock_conn, buff, ret, 0);
         }
         fclose(fp);
-
+        sleep(10);
         // 断开连接
         close(sock_conn);
-    }
-    
+        
+    // }
+    system("netstat - an | grep 1234");
     // 关闭监听套接字
     close(sock_listen);
     
