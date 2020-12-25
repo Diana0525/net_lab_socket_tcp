@@ -1,5 +1,19 @@
-#include "tcp_server.h"
-
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#pragma pack(1)
+typedef struct _file_info
+{
+    char name[51];
+    unsigned int size;
+} file_info;
+#pragma pack()
+// 指令格式：端口号+文件路径
 int main(int argc, char** argv)
 {
     if(argc != 3){
@@ -8,7 +22,7 @@ int main(int argc, char** argv)
     }
 
     struct stat st;
-    if(stat(argv[2],&st) == -1){
+    if(stat(argv[2],&st) == -1){// 读取相关路径上的文件
         perror("Get file info fail");
         exit(1);
     }
@@ -19,11 +33,11 @@ int main(int argc, char** argv)
     file_info fi;
     fi.size = st.st_size;
     char *p = NULL;
-    p = strrchr(argv[2], '/');
+    p = strrchr(argv[2], '/');// 返回从后往前第一个"/"出现的位置
     if(p == NULL){
-        strcpy(fi.name, argv[2]);
+        strcpy(fi.name, argv[2]); // 没有"/"表示argv[2]是一个文件名
     }else{
-        strcpy(fi.name,p+1);
+        strcpy(fi.name,p+1); // 路径的末尾是文件名
     }
 
     int sock_listen;

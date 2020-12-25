@@ -1,5 +1,17 @@
-#include "tcp_client.h"
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+// 文件描述信息
+#pragma pack(1)
+typedef struct _file_info
+{
+    char name[51];
+    unsigned int size;
+} file_info;
+#pragma pack()
 int main(int argc, char const *argv)
 {
     file_info fi;
