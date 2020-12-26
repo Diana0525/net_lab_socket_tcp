@@ -85,12 +85,12 @@ int sendfile(int cli_sockfd,char *cmd)
 			printf("success to send.\n\n");
 		}
 	}
-	/*
+	
 	if(send(cli_sockfd,"200",3,0)==-1)//发送成功的标识符
 	{
 		printf("send error\n");
 	}
-	*/
+	
 	fclose(fp);
 	return 0;
 }
@@ -234,8 +234,6 @@ void * thread_func(void * arg)
 			{
 				break;
 			}
-			//printf("Received from %s: %s\r",ipstr,buf);
-			//printf("Received from %s,%s\nmessage:%s\r",ipstr, buf);
 		}
 		close(client_fd);
 		printf("\n\n");
@@ -279,7 +277,7 @@ int main()
 		perror("listen");
 		exit(1);
 	}
-
+    printf("listening...\n");
 
 	for(no=0;no<2;no++)
 	{

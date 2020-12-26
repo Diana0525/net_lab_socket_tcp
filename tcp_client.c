@@ -102,6 +102,8 @@ int cmd_down(int sockfd,char * cmd)//下载文件
 	int length=0;
 	while(length=recv(sockfd,buf,sizeof(buf),0))
 	{ 	
+		printf("%d\n",length=recv(sockfd,buf,sizeof(buf),0));
+		printf("len:%d\n",length);
 		if (length < 0)  
         {  
             printf("Recieve Data Failed!\n");  
@@ -168,19 +170,19 @@ int cmd_up(int sockfd,char *cmd)//上传文件
 	 	}
 	 	//memset(buf,0,sizeof(buf));
 	}
-	//sleep(1);
-	if(recv(sockfd,buf,sizeof(buf),0)>0)//互斥,与和客户端保持同步
+	sleep(1);
+	if(recv(sockfd,buf,sizeof(buf),0)>0)
 	{
 		if(strncmp(buf,"200",3)==0)
 		{
 			printf("upload File: %s Finished!\n\n", filename);
 		}
 	}
-	/*
+	
 	if(send(sockfd,"200",3,0)==-1)//发送成功的标识符
 	{
 		printf("send error\n");
-	}*/
+	}
 	fclose(fp);
 	return 0;
 }
